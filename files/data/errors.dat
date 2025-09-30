@@ -1,1 +1,41 @@
+AC02Transaction type '%1' not allowed for this operation.
+AC03Insufficient funds. Balance: %1, attempted withdrawal: %2.
+AC08Page number contains invalid characters. It must be numeric. <00001-99999>
+AC10Unknown transaction type: '%1'.
+CU01Method '%1' not allowed for this object.
+US02User '%1' has not been found.
+US03Bad password for user '%1'.
+US04Permission denied.
+US05You can only get user details or login.
+US06Unknown role.
+US07Only BaAd is allowed to change roles.
+TF01Method '%1' not allowed for transfer object.
+TF02Mismatch between account currencies: '%1' =/= '%2'.
+TF03Account balance is lower than the transfer amount.
+DB02Error reading from CUSTDB (list).
+DB03Error reading from CUSTDB (item).
+DB04Error reading accounts from ACCDB for customer.
+DB06Error reading from TRANSDB.
+DB07Error reading from ACCDB (list).
+DB08Error reading from ACCDB (item).
+DB11Error writing to TRANSDB.
+DB12Error writing to ACCDB.
+DB90The searched object was not found in the database or the table is empty.
+DB93Unique constraint violation.
+DB99A general SQL query error occurred in database.
+DP01The requested object is not valid.
+DP02Unable to process the request for object '%1'.
+DP04Error while logging in.
+AU01Permission denied. Action for a user with role '%1' not allowed.
+AU02Permission denied. Action of Teller to Admin not allowed.
+AU03Permission denied. Action of Teller to another Teller not allowed.
+AU04Permission denied. Action of Teller to '%1' not allowed.
+AU05Permission denied. Action of Client to any other user than self not allowed.
+G92Data not written in JSON File.
+TR01Data format is incomplete.
+TR02Given data does not exist.
+TR03Invalid characters for data(not numeric).
+TR04Invalid month.
+TR05Invalid day.
 
+SQL01Error executing SQL command: '%1'
