@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>TF03TRANSFERBO: Account balance is lower than the transfer amount.<ERR_END>

@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>AU03TRANSFERBO: Permission denied. Action of Teller to another Teller not allowed.<ERR_END>

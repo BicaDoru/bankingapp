@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>TF02TRANSFERBO: Mismatch between account currencies: 'RON' =/= 'USD'.<ERR_END>

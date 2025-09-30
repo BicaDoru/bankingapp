@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>DB99ACCBO: A general SQL query error occurred in database.<ERR_END>

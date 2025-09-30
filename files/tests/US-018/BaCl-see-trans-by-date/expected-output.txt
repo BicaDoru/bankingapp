@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>AU01ACCBO: Permission denied. Action for a user with role 'BaCl' not allowed.<ERR_END>

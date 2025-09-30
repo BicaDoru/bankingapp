@@ -1,0 +1,15 @@
+#!/bin/bash
+export COB_LIBRARY_PATH=lib
+export COB_FILE_PATH=$PWD
+export RUN_DBNAME="pocbanking@127.0.0.1:5432"
+export RUN_USERNAME="postgres"
+export RUN_PASSWD="postgres"
+
+. $PWD/scripts/dispatcher-utils
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ACTUAL_OUTPUT_FILE="${SCRIPT_DIR}/actual-output.txt"
+rm -f "$ACTUAL_OUTPUT_FILE"
+
+input_value="00001 POST    TRANSFER  RO83PORL6549588913321712       RO81RZBR2152443323612418       0000005555"
+$(run_dispatcher_clean "$ACTUAL_OUTPUT_FILE" "$input_value" "trans-remove-ts")

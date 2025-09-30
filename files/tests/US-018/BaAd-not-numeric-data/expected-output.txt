@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>TR03ACCBO: Invalid characters for data(not numeric).<ERR_END>

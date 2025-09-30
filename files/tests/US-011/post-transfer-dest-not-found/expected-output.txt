@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>DB90TRANSFERBO: The searched object was not found in the database or the table is empty.<ERR_END>
