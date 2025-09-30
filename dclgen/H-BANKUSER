@@ -1,0 +1,6 @@
+       01 BANKUSER-TABLE.
+         05 H-BUSR-ID                              PIC 9(05).
+         05 H-BUSR-USERNAME                        PIC X(50).
+         05 H-BUSR-PASSWORD                        PIC X(60).
+         05 H-BUSR-ROLE                            PIC X(04).
+           

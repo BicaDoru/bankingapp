@@ -1,0 +1,33 @@
+      ****************************************************************** 
+      * DBUTILVARS- GENERIC VARIABLES USED FOR BD CONNECTION AND GET
+      * CREDENTIALS,FLAGS FOR CONNECTIONS AND ERROR CODES 
+      ****************************************************************** 
+       01 DBUTILVARS-INTERFACE. 
+         05 DBUTILVARS-IN.
+           10 DB-NAME                PIC X(30) VALUE SPACE.
+           10 DB-USERNAME            PIC X(30) VALUE SPACE. 
+           10 DB-PASSWD              PIC X(10) VALUE SPACE. 
+
+         05 DBUTILVARS-FLAGS. 
+           10 FG-CONNECT-STATUS      PIC X VALUE 'Y'. 
+             88 FG-CONNECT-Y         VALUE 'Y'. 
+             88 FG-CONNECT-N         VALUE 'N'. 
+           10 FG-DB-COMMIT           PIC X VALUE 'N'. 
+             88 FG-DB-COMMIT-Y       VALUE 'Y'. 
+             88 FG-DB-COMMIT-N       VALUE 'N'. 
+
+         05 DBUTILVARS-CONSTANTS. 
+           10 K-DBNAME               PIC X(10) VALUE "RUN_DBNAME". 
+           10 K-USERNAME             PIC X(12) VALUE "RUN_USERNAME".
+           10 K-PASSWD               PIC X(10) VALUE "RUN_PASSWD".
+           
+         05 DB-ERRORS.
+           10 U-SQLSTATE             PIC X(5) VALUE SPACES.
+           10 U-ERR-MSG              PIC X(120) VALUE SPACES.
+           10 U-SQLCODE              PIC S9(9)  COMP VALUE 0.
+             88 U-SQL-OK             VALUE 0.
+             88 U-SQL-NO-DATA        VALUE 100.
+             88 U-SQL-CONN-FAILED    VALUE -402.
+             88 U-SQL-UNIQUE-DATA    VALUE -403.
+             88 U-SQL-INTERNAL-ERR   VALUE -602.
+    

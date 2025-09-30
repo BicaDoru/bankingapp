@@ -1,0 +1,51 @@
+#!/bin/bash
+export RUN_DBNAME="pocbanking@127.0.0.1:5432"
+export RUN_USERNAME="postgres"
+export RUN_PASSWD="postgres"
+export COB_LIBRARY_PATH=./lib
+> files/tables.json
+
+#bin/DISPATCHER "00001 GET     CUSTOMERS"
+#bin/DISPATCHER "00001 GET     CUSTOMER  00003"
+#bin/DISPATCHER "00001 GET     TRANS     0000400001"
+#bin/DISPATCHER "      GET     ACCOUNTS  00003"
+# bin/DISPATCHER "00001 POST    TRANS     0001500001DEPOSIT   0000002000"
+#bin/DISPATCHER "00001 POST    TRANS     0000100004WITHDRAW  0000001000"
+#bin/DISPATCHER "00001 POST    TRANS     0000100003WITHDRAW  0000000100"
+#bin/DISPATCHER "00001 POST    TRANS     0000300005DEPOSIT   0000300050"
+#bin/DISPATCHER "00001 POST    CUSTOMER  00004intergog                                          dsTFYUf"
+#bin/DISPATCHER "00001 PUT     CUSTOMER  00004intern01                                          SdddYUf"
+#bin/DISPATCHER "00001 DELETE  CUSTOMER  00004"
+#bin/DISPATCHER "00001 POST    ACCOUNT   00001 RO84PORL6468454654822222       USD"
+#bin/DISPATCHER "00001 PUT     ACCOUNT   00004 0000005555"
+#bin/DISPATCHER "00001 DELETE  ACCOUNT   00002"
+
+# ---------------------------------------- TESTE TRANSACTIONS ----------------------------------------
+# bin/DISPATCHER "00001 GET     TRANS     0000100002 00002" #Merge si var default"
+# bin/DISPATCHER "00001 GET     TRANS"
+# bin/DISPATCHER "00001 GET     TRANS                     2025-09-01"
+# bin/DISPATCHER "00001 GET     TRANS     0000000002      2025-09-04"
+# ---------------------------------------- TESTE ACCOUNTS ----------------------------------------
+# bin/DISPATCHER "00001 GET     ACCOUNTS  00003"
+# bin/DISPATCHER "00001 GET     ACCOUNTS        00002"
+# bin/DISPATCHER "00001 GET     ACCOUNTS"
+# bin/DISPATCHER "00002 GET     ACCOUNTS"
+# bin/DISPATCHER "      GET     ACCOUNTS"
+# ---------------------------------------- TESTE USERS ----------------------------------------
+# bin/DISPATCHER "00001 GET     USERS"
+# bin/DISPATCHER "00001 GET     USERS     00001"
+# bin/DISPATCHER "00002 GET     USERS"
+# bin/DISPATCHER "00001 GET     USERS     00002"
+# ---------------------------------------- TESTE USERS ----------------------------------------
+# bin/DISPATCHER "00001 GET     CUSTOMERS"
+# bin/DISPATCHER "00001 GET     CUSTOMERS 00002"
+# ---------------------------------------- TESTE TRANSFER -------------------------------------
+#bin/DISPATCHER "00001 POST    TRANSFER  RO83PORL6549588913321712       RO67RZBR4848283491326775       0000005555"
+#bin/DISPATCHER "00001 GET     TRANSFER  00000 00000"
+#bin/DISPATCHER "00003 GET     TRANSFER  00004 00000 00001"
+
+
+#bin/DISPATCHER "00001 POST    USER      newclient                                          newclient                                                    BaCl"
+#bin/DISPATCHER "00001 PUT     USER      00005 client_updated                                     BaTe"
+#bin/DISPATCHER "00001 DELETE  USER      00005"
+

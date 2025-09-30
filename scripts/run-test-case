@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Runs a full integration test.
+# Usage: ./scripts/run-test-case <test_name>
+
+# Configuration
+BASE_TEST_DIR="./files/tests"
+TEST_NAME=$1
+RECEIVED_COLUMNS=$2
+TEST_CASE_DIR="${BASE_TEST_DIR}/${TEST_NAME}"
+
+if [ -z "$TEST_CASE_DIR" ] || [ ! -d "$TEST_CASE_DIR" ]; then
+  echo "Error: Please specify the test name (e.g. US2-get-customer-details)."
+  exit 1
+fi
+echo "$RECEIVED_COLUMNS - runtestcase"
+# Step 1: reset database
+echo "Resetting the database..."
+output=$(./scripts/sql/reset-db)
+status=$?
+if [ $status -ne 0 ]; then
+    # Show output on failure
+    echo "$output"
+    echo "FAILURE: Database reset failed"
+    exit 1
+fi
+
+# Step 2: run the program, hiding output on success.
+bash "${TEST_CASE_DIR}/run.sh" || { echo "FAILURE: Test run command failed."; exit 1; }
+
+# Step 3: retrieving files to assert on
+tables_to_assert=()
+has_assert_file=0
+
+for expected_file in ${TEST_CASE_DIR}/expected-*.txt; do
+    table_name=$(basename "$expected_file" .txt | sed 's/expected-//')
+
+    if [ "$table_name" = "output" ]; then
+        # If the file is expected_output.txt → mark the flag and skip adding
+        has_assert_file=1
+    else
+        tables_to_assert+=("$table_name")
+    fi
+done
+
+# Step 4: assert-db if there are tables_to_assert
+if [ ${#tables_to_assert[@]} -ne 0 ]; then
+    bash scripts/asserts/assert-db "$TEST_CASE_DIR" "$RECEIVED_COLUMNS" "${tables_to_assert[@]}" 
+    ASSERT_RESULT=$?
+    echo ""
+    
+    if [ $ASSERT_RESULT -ne 0 ]; then
+        echo "TEST FAILED (assert-db): $TEST_CASE_DIR"
+        exit 1
+    fi
+fi
+
+# Step 5: assert-output if expected-output.txt exists
+if [ $has_assert_file -eq 1 ]; then
+    EXPECTED_FILE="${TEST_CASE_DIR}/expected-output.txt"
+    ACTUAL_FILE="${TEST_CASE_DIR}/actual-output.txt"
+
+    bash scripts/asserts/assert-file "$EXPECTED_FILE" "$ACTUAL_FILE"
+    ASSERT_RESULT=$?
+    echo ""
+    
+    if [ $ASSERT_RESULT -ne 0 ]; then
+        echo "TEST FAILED (assert-output): $TEST_CASE_DIR"
+        exit 1
+    fi
+fi
+
+echo "TEST PASSED: $TEST_CASE_DIR"
+exit 0

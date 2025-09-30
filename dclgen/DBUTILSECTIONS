@@ -1,0 +1,76 @@
+      ******************************************************************
+      *    DBUTILSSECTIONS-generic reusable sections for DB connection
+      *                               and credentials
+      ******************************************************************
+       DB-INIT-CONNECTION SECTION.
+           SET FG-DB-COMMIT-Y                TO TRUE
+           SET FG-CONNECT-Y                  TO TRUE
+      *    
+           PERFORM DB-GET-CREDENTIALS
+      *    
+           IF FG-CONNECT-Y
+             PERFORM DB-CONNECT
+           END-IF
+           .
+       DB-INIT-CONNECTION-END.
+           EXIT.
+      ******************************************************************
+       DB-GET-CREDENTIALS SECTION.
+           ACCEPT DB-NAME     FROM ENVIRONMENT K-DBNAME
+           ACCEPT DB-USERNAME FROM ENVIRONMENT K-USERNAME
+           ACCEPT DB-PASSWD   FROM ENVIRONMENT K-PASSWD
+      *    
+           IF DB-NAME = SPACES 
+           OR DB-USERNAME = SPACES 
+           OR DB-PASSWD = SPACES
+             SET FG-CONNECT-N TO TRUE
+           END-IF
+           .
+       DB-GET-CREDENTIALS-END.
+           EXIT.
+      ******************************************************************
+       DB-CONNECT SECTION.
+           EXEC SQL
+             CONNECT :DB-USERNAME IDENTIFIED BY :DB-PASSWD 
+             USING :DB-NAME
+           END-EXEC
+      *    
+           IF SQLCODE NOT = 0
+             display sqlcode
+             SET FG-CONNECT-N TO TRUE
+           END-IF
+           .
+       DB-CONNECT-END.
+           EXIT.
+      ******************************************************************
+       DB-FINISH SECTION.
+      *    
+           IF FG-CONNECT-N
+             EXIT SECTION
+           END-IF
+      *    
+           IF FG-DB-COMMIT-Y
+             EXEC SQL 
+               COMMIT WORK
+             END-EXEC
+           ELSE
+             EXEC SQL 
+               ROLLBACK WORK
+             END-EXEC
+           END-IF
+      *    
+      *    DISCONNECT
+           EXEC SQL
+             DISCONNECT ALL
+           END-EXEC
+
+           .
+       DB-FINISH-END.
+           EXIT.
+      ******************************************************************
+       DB-SQL-DEFAULT SECTION.
+           MOVE SQLCODE               TO U-SQLCODE
+           .
+       DB-SQL-DEFAULT-END.
+           EXIT.
+      ******************************************************************

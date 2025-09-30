@@ -1,0 +1,34 @@
+#!/bin/bash
+
+DB_NAME="pocbanking"
+PG_USER="postgres"
+
+SQL_CREATE_TABLES_PATH="$PWD/sql/create_tables.sql"
+SQL_INSERT_DATA_PATH="$PWD/sql/insert_data.sql"
+
+# exit the script if any command fails
+set -e
+
+# Check if the SQL file paths have been changed from the default placeholder.
+if [ "$SQL_CREATE_TABLES_PATH" = "/full/path/to/your/create_tables.sql" ] || [ "$SQL_INSERT_DATA_PATH" = "/full/path/to/your/insert_data.sql" ]; then
+    echo "ERROR: Please update the SQL file paths in the script before running."
+    exit 1
+fi
+
+echo "[1/4] Dropping database '$DB_NAME' (if it exists)..."
+sudo -u "$PG_USER" dropdb --if-exists "$DB_NAME"
+echo "      Done."
+
+echo "[2/4] Creating database '$DB_NAME'..."
+sudo -u "$PG_USER" createdb "$DB_NAME"
+echo "      Done."
+
+echo "[3/4] Creating tables from '$SQL_CREATE_TABLES_PATH'..."
+sudo -u "$PG_USER" psql -d "$DB_NAME" -f "$SQL_CREATE_TABLES_PATH"
+echo "      Done."
+
+echo "[4/4] Inserting data from '$SQL_INSERT_DATA_PATH'..."
+sudo -u "$PG_USER" psql -d "$DB_NAME" -f "$SQL_INSERT_DATA_PATH"
+echo "      Done."
+
+echo "--- Database reset successful! ---"

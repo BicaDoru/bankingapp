@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# This script asserts that the data in one or more database tables
+# matches their expected files.
+#
+# Usage:
+# ./scripts/assert-db.sh <path_to_test_case_directory> <table1> [table2...]
+
+TEST_CASE_DIR=$1
+RECEIVED_COLUMNS=$2
+
+shift
+shift
+# We read all tables after SECOND argument <table1> [table2...]
+TABLES_TO_ASSERT=("$@")
+HAS_FAILURE=0
+
+# Main Loop 
+for table_name in "${TABLES_TO_ASSERT[@]}"; do
+    echo ""
+    echo "Asserting table: $table_name "
+    echo "------------------------------------"
+    
+    EXPECTED_FILE="${TEST_CASE_DIR}/expected-${table_name}.txt"
+    ACTUAL_FILE="${TEST_CASE_DIR}/actual-${table_name}.txt"
+
+    if [ ! -f "$EXPECTED_FILE" ]; then
+      echo "WARNING: Expected file not found for table '$table_name'. Skipping."
+      continue
+    fi
+
+    # Step 4: Unload the table into a file
+    bash scripts/sql/unload-table "$table_name" "$ACTUAL_FILE" "$RECEIVED_COLUMNS"
+    if [ $? -ne 0 ]; then
+        HAS_FAILURE=1
+        continue
+    fi
+
+    # Step 5: Comparing files
+    echo "Comparing actual data with expected data..."
+    echo ""
+    if diff -q "$EXPECTED_FILE" "$ACTUAL_FILE" > /dev/null; then
+      echo "ASSERT SUCCESS: Table '$table_name' matches expected data."
+      rm "$ACTUAL_FILE"
+    else
+      echo "ASSERT FAILURE: Table '$table_name' does not match."
+      echo "Differences for $table_name "
+      diff "$EXPECTED_FILE" "$ACTUAL_FILE"
+      echo ""
+      HAS_FAILURE=1
+    fi
+    echo "------------------------------------"
+done
+
+exit $HAS_FAILURE

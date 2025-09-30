@@ -1,0 +1,7 @@
+       01 TRANSACTION-TABLE.
+         05 H-TRA-ID                         PIC 9(05).
+         05 H-TRA-ACCOUNTID                  PIC 9(05).
+         05 H-TRA-AMOUNT                     PIC 9(08)V99.
+         05 H-TRA-TRANTS                     PIC X(35).
+         05 H-TRA-OPERATIONTYPE              PIC X(10).
+         05 H-TRA-ACCBALANCE                 PIC 9(08)V99.

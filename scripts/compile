@@ -1,0 +1,86 @@
+#!/bin/bash
+
+# SHELL SCRIPT FOR COMPILING COBOL PROGRAMS.
+# MODULES VARIABLE MUST ALWAYS BE UP TO DATE WITH cobol CONTENT.
+DB_PGMS=("TRANSDB" "ACCDB" "CUSTDB" "BUSRDB" "TRANSFERDB")
+MODULES=("TRANSFERBO" "TRANSFERDB" "TRANSDB" "ACCDB" "CUSTDB" "ACCBO" "CUSTBO" "GENERIC" "ERROR" "BUSRBO" "BUSRDB" "LOGGER")
+
+export COB_LDFLAGS=-Wl,--no-as-needed
+export CPATH=/usr/include/postgresql/
+
+########################################################
+# Provided a list, check if the item is found in the list.
+# The list is the second argument.
+# Returns 1 if item found in list, 0 otherwise.
+########################################################
+function contains {
+  local ITEM=$1; shift
+  local LIST=$@
+  LIST=($LIST)
+
+  for i in "${LIST[@]}"
+  do
+    if [[ $i == $ITEM ]]
+    then
+      return 1
+    fi
+  done
+  return 0
+}
+
+OPTIONS="-I/$PWD/cpy"
+pgm_to_compile=$1
+
+compile_cmd="cobc " 
+IS_MOD=0
+IS_DB=0
+
+
+contains $pgm_to_compile "${MODULES[@]}"
+if [ $? -eq 1 ]
+then
+  rm -f $PWD/lib/$pgm_to_compile.so
+  compile_cmd+="-m "
+  IS_MOD=1
+else
+  rm -f $PWD/bin/$pgm_to_compile
+  compile_cmd+="-x "
+fi
+
+contains $pgm_to_compile "${DB_PGMS[@]}"
+if [ $? -eq 1 ]
+then
+  IS_DB=1
+  echo "starting ocesql precompile"
+  ocesql --inc=$PWD/dclgen $PWD/cobol/$pgm_to_compile.cbl $PWD/cobol/$pgm_to_compile.cob
+  if [ $? -ne 0 ]
+  then
+    echo "SQL PRECOMPILE ERROR!"
+    # TODO: see if there is warning return code which is ok to continue with compile. Maybe #? = 1 or 2 is also acceptable
+    exit 4
+  fi
+  ls $PWD/cobol/$pgm_to_compile.cob
+  compile_cmd+="-locesql "
+  #echo compile_cmd so far: $compile_cmd
+  if [ $IS_MOD == 1 ]
+  then
+    compile_cmd+="$PWD/cobol/$pgm_to_compile.cob -o $PWD/lib/$pgm_to_compile.so -I/$PWD/cpy -I/$PWD/dclgen"
+  else
+    compile_cmd+="$PWD/cobol/$pgm_to_compile.cob -o $PWD/bin/$pgm_to_compile -I/$PWD/cpy -I/$PWD/dclgen"
+  fi
+else
+  if [ $IS_MOD == 1 ]
+  then
+    compile_cmd+="$PWD/cobol/$pgm_to_compile.cbl -o $PWD/lib/$pgm_to_compile.so -I/$PWD/cpy -I/$PWD/dclgen"
+  else
+    compile_cmd+="$PWD/cobol/$pgm_to_compile.cbl -o $PWD/bin/$pgm_to_compile -I/$PWD/cpy -I/$PWD/dclgen"
+  fi
+fi
+
+echo "compile command to be executed: " $compile_cmd
+eval $compile_cmd
+compile_status=$?
+
+ [[ IS_DB -eq 1 ]] && rm -f $PWD/cobol/$pgm_to_compile.cob
+
+exit $compile_status 

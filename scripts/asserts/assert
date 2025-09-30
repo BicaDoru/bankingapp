@@ -1,0 +1,62 @@
+#!/bin/bash
+
+BIN_DIR="./bin"
+PASS_COUNT=0
+FAIL_COUNT=0
+
+function assert_output {
+    local prog_name="$1"
+    local input="$2"
+    local expected="$3"
+
+    local output=$(echo -e "$input" | $BIN_DIR/$prog_name 2>/dev/null)
+
+    if echo "$output" | grep -q "$expected"; then
+        echo "PASSED input='$input' rezultat= '$expected'"
+        ((PASS_COUNT++))
+    else
+        echo "$prog_name: FAILED input='$input'"
+        echo "    Expected: '$expected'"
+        echo "    Got:      '$output'"
+        ((FAIL_COUNT++))
+    fi
+}
+
+# input_source could be a filename or empty string if no input
+# No input file provided = just run the program (or input_source is a string input)
+function assert_file {
+    local prog_name="$1"
+    local input_source="$2"
+    local output_file="$3"
+    local expected_file="$4"
+
+    if [[ -n "$input_source" && -f "$input_source" ]]; then
+        
+        cat "$input_source" | $BIN_DIR/$prog_name > /dev/null 2>&1
+    else
+       
+        echo -e "$input_source" | $BIN_DIR/$prog_name > /dev/null 2>&1
+    fi
+
+    if diff -q "$output_file" "$expected_file" > /dev/null; then
+        echo "PASSED file comparison: '$output_file' == '$expected_file'"
+        ((PASS_COUNT++))
+    else
+        echo "$prog_name: FAILED file comparison"
+        echo "    Output File: '$output_file'"
+        echo "    Expected File: '$expected_file'"
+        echo "    Differences:"
+        diff "$output_file" "$expected_file"
+        ((FAIL_COUNT++))
+    fi
+}
+
+
+function show_results {
+  echo "Rezultate: ${PASS_COUNT} PASSED, ${FAIL_COUNT} FAILED"
+  if [ $FAIL_COUNT -eq 0 ]; then
+      echo "Toate testele au trecut!"
+  else
+      echo "Unele teste au esuat."
+  fi
+}

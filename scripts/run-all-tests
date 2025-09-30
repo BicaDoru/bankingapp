@@ -1,0 +1,173 @@
+#!/bin/bash
+
+# Run all the tests. Kind of for the "integration" purposes.
+
+# Configuration
+BASE_TEST_DIR="./files/tests"
+tests_ok=0
+total_tests=0
+
+# Compile all programs. Making sure that test are executed on fresh programs.
+echo "--- Compiling start ---"
+output=$(./scripts/compileall)
+status=$?
+
+# Check if it finished cleanly and all compiled successfully
+if [ $status -ne 0 ]; then
+    # Show output on failure
+    echo "$output"
+    echo "Something went wrong in compileall step"
+    exit 1
+fi
+echo "--- Compiling end ---"
+
+run_test() {
+    local temp_output=$(mktemp)
+    echo "--- Running test: $1 with parameter $2 --- Command: bash scripts/run-test-case $1 $2"
+
+    bash scripts/run-test-case "$1" "$2" &> "$temp_output"
+    
+    local status=$?
+
+    local output=$(cat "$temp_output")
+    rm "$temp_output"
+
+    if [ $status -eq 0 ]; then
+        echo "$1 = SUCCESS"
+        tests_ok=$((tests_ok + 1))
+    else
+        echo "$output"
+        echo "$1 = ERROR"
+    fi
+    
+    total_tests=$((total_tests + 1))
+}
+
+######### US-001 ##########
+run_test "US-001/login-bad-password" 
+run_test "US-001/login-bad-username"
+run_test "US-001/login-successful"
+
+########## US-002 ##########
+run_test "US-002/create-customer" "id,username"
+run_test "US-002/create-customer-bad-arg"
+run_test "US-002/delete-customer"
+run_test "US-002/delete-customer-bad-arg"
+run_test "US-002/update-customer"
+run_test "US-002/update-customer-bad-arg"
+
+########## US-003 ##########
+run_test "US-003/create-acc-fail-role"
+run_test "US-003/create-acc-success"
+run_test "US-003/delete-acc-success" 
+run_test "US-003/delete-acc-fail"
+run_test "US-003/update-acc-success"
+run_test "US-003/update-acc-fail-role"
+
+########## US-004 ##########
+run_test "US-004/BaCl-delete-acc-fail-role"
+run_test "US-004/BaCl-create-acc-success"
+run_test "US-004/BaCl-update-acc-success"
+run_test "US-004/BaCl-update-acc-fail-role"
+run_test "US-004/BaCl-create-acc-bad-arg"
+
+
+########## US-005 ##########
+run_test "US-005/BaAd-on-BaCl-deposit"
+run_test "US-005/BaAd-on-BaCl-withdraw"
+run_test "US-005/BaAd-on-BaTe-deposit"
+run_test "US-005/BaAd-on-BaTe-withdraw"
+run_test "US-005/BaCl-on-other-deposit"
+run_test "US-005/BaCl-on-other-withdraw"
+run_test "US-005/BaCl-on-OWN-deposit"
+run_test "US-005/BaCl-on-OWN-withdraw"
+run_test "US-005/BaTe-on-BaCl-deposit"
+run_test "US-005/BaTe-on-BaCl-withdraw"
+run_test "US-005/BaTe-on-other-BaTe-deposit"
+run_test "US-005/BaTe-on-other-BaTe-withdraw"
+run_test "US-005/BaTe-on-OWN-deposit"
+run_test "US-005/BaTe-on-OWN-withdraw"
+
+
+
+########## US-006 ##########
+run_test "US-006/client-get-accounts-for-same-client"
+run_test "US-006/client-get-accounts-for-other-person-impossible"
+run_test "US-006/client-get-accounts-for-teller-impossible"
+run_test "US-006/client-get-transactions-for-same-client-default-page"
+run_test "US-006/client-get-transactions-for-other-person-impossible"
+run_test "US-006/client-get-transactions-but-no-existing-transactions"
+run_test "US-006/client-get-transactions-for-same-client-page3"
+
+# ########## US-007 ##########
+run_test "US-007/BaAd-on-BaCl-trans"
+run_test "US-007/BaAd-on-BaCl-accounts"
+run_test "US-007/BaAd-on-BaTe-trans"
+run_test "US-007/BaAd-on-BaTe-accounts"
+run_test "US-007/BaTe-on-BaCl-trans"
+run_test "US-007/BaTe-on-BaCl-accounts"
+run_test "US-007/BaTe-on-other-BaTe-trans"
+run_test "US-007/BaTe-on-other-BaTe-accounts"
+run_test "US-007/BaTe-on-own-trans"
+run_test "US-007/BaTe-on-own-accounts"
+
+######### US-011 ##########
+run_test "US-011/post-transfer-BaAd-to-BaTe"
+run_test "US-011/post-transfer-BaCl-to-BaTe"
+run_test "US-011/post-transfer-BaTe-to-BaTe"
+run_test "US-011/post-transfer-BaCl-success" "id,source_iban,destination_iban,amount,currency"
+run_test "US-011/post-transfer-BaTe-to-BaCl"
+run_test "US-011/post-transfer-currency-mismatch"
+run_test "US-011/post-transfer-dest-not-found"
+run_test "US-011/post-transfer-low-balance"
+
+########## US-018 ##########
+
+run_test "US-018/BaAd-see-trans-on-an-existing-date"
+run_test "US-018/BaTe-see-trans-by-date"
+run_test "US-018/BaCl-see-trans-by-date"
+run_test "US-018/BaAd-wrong-date"
+run_test "US-018/BaAd-see-trans-with-diff-date-format"
+run_test "US-018/BaAd-incomplete-data"
+run_test "US-018/BaAd-invalid-month"
+run_test "US-018/BaAd-invalid-day"
+run_test "US-018/BaAd-not-numeric-data"
+run_test "US-018/BaAd-trans-on-an-accid-date"
+run_test "US-018/BaAd-see-trans-accid-wrong"
+run_test "US-018/BaAd-see-trans-accid-right-on-date-wrong"
+
+######### POST PUT DELETE BANKUSER ##########
+run_test "non-us-tests/post-buser-bad-role"
+run_test "non-us-tests/post-buser-BaTe-to-BaTe"
+run_test "non-us-tests/post-buser-success"
+run_test "non-us-tests/post-buser-unique-violation"
+run_test "non-us-tests/delete-buser-success"
+run_test "non-us-tests/delete-buser-BaTe-to-BaTe"
+run_test "non-us-tests/delete-buser-BaCl-to-BaAd"
+run_test "non-us-tests/put-buser-BaTe-change-role"
+run_test "non-us-tests/put-buser-success-BaAd"
+run_test "non-us-tests/put-buser-success-BaTe"
+run_test "non-us-tests/put-buser-unique-violation"
+
+# ######### GET ##########
+run_test "non-us-tests/get-accounts"
+run_test "non-us-tests/get-bankusers"
+run_test "non-us-tests/get-customers"
+run_test "non-us-tests/get-transactions"
+run_test "non-us-tests/get-transfers"
+
+########## Statistics ##########
+echo "--- Tests Statistics ---"
+echo "Tests success: $tests_ok"
+echo "Tests failed: $((total_tests - tests_ok))"
+echo "Total tests: $total_tests"
+echo "-----------------------------------"
+if [ $total_tests -eq $tests_ok ]; then
+    echo "Integration test status: SUCCESS"
+    echo "------------------------------------"
+    exit 0
+else
+    echo "Integration test status: FAILURE"
+    echo "------------------------------------"
+    exit 1
+fi

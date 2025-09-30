@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# This script unloads data from a table into a file
+# Usage:
+# ./scripts/unload-table.sh <table_name> <destination_path> [columns]
+
+# --- Configuration ---
+TABLE_NAME=$1
+DESTINATION_FILE=$2
+NEEDED_COLUMNS=$3
+DB_CONN_STRING="postgresql://postgres:postgres@127.0.0.1:5432/pocbanking"
+
+# --- Validation ---
+if [ -z "$TABLE_NAME" ] || [ -z "$DESTINATION_FILE" ]; then
+  echo "Error: Missing arguments."
+  echo "Usage: $0 <table_name> <destination_path> [columns]"
+  exit 1
+fi
+
+# --- Build SELECT query ---
+if [ -z "$NEEDED_COLUMNS" ]; then
+    SELECT_QUERY="SELECT * FROM ${TABLE_NAME} ORDER BY id"
+else
+    SELECT_QUERY="SELECT ${NEEDED_COLUMNS} FROM ${TABLE_NAME} ORDER BY id"
+fi
+
+# --- Execution ---
+psql "$DB_CONN_STRING" -c "\copy (${SELECT_QUERY}) TO STDOUT WITH CSV DELIMITER '|' HEADER" > "$DESTINATION_FILE"
+
+if [ $? -eq 0 ]; then
+    exit 0
+else
+    echo "FAILURE: Failed to unload data from table '$TABLE_NAME'."
+    exit 1
+fi

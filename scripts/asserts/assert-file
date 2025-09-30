@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# This script ompare the content of the 2 files.
+#
+# Usage:
+# ./scripts/asserts/assert-file <path_to_expected_file> <path_to_actual_file>
+
+EXPECTED_FILE=$1
+ACTUAL_FILE=$2
+exit_status=0
+
+echo ""
+echo "------------------------------------"
+echo "Asserting files..."
+echo "Expected file path: '$EXPECTED_FILE'"
+echo "Actual file path:   '$ACTUAL_FILE'"
+
+if [ ! -f "$EXPECTED_FILE" ]; then
+  echo "ERROR: File not found '$EXPECTED_FILE'."
+  exit_status=1
+fi
+
+if [ ! -f "$ACTUAL_FILE" ]; then
+  echo "ERROR: File not found '$ACTUAL_FILE'."
+  exit_status=1
+fi
+
+if [ $exit_status -eq 0 ]; then
+  if diff -q "$EXPECTED_FILE" "$ACTUAL_FILE" > /dev/null; then
+    echo "ASSERT FILE SUCCESS."
+  else
+    echo "ASSERT FILE FAILURE: File mismatch."
+    echo "Differences: "
+    diff "$EXPECTED_FILE" "$ACTUAL_FILE"
+    exit_status=1
+  fi
+fi
+
+echo "------------------------------------"
+exit $exit_status

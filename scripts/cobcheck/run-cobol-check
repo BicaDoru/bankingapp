@@ -1,0 +1,13 @@
+#!/bin/bash
+
+rm cobcheck-tests-results/ALLTESTS
+rm cobcheck-tests-results/CC##99
+rm cobcheck-tests-results/CC##99.CBL
+rm cobcheck-tests-results/ParserErrorLog.txt
+rm cobcheck-tests-results/testResults.txt
+
+export COB_COPY_DIR=$PWD/cpy
+export COB_LIBRARY_PATH=$PWD/lib
+export COBCPY=$PWD/lib
+
+java -jar dependecies/cobol-check-0.2.16.jar -c dependecies/cobcheck-config.properties $@

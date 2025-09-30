@@ -1,0 +1,7 @@
+       01 TRANSFER-TABLE.
+         05 H-TRANSFER-ID                    PIC 9(05).
+         05 H-TRANSFER-SRCIBAN               PIC X(30).
+         05 H-TRANSFER-DESTIBAN              PIC X(30).
+         05 H-TRANSFER-AMOUNT                PIC 9(08)V99.
+         05 H-TRANSFER-TIMESTAMP             PIC X(35).
+         05 H-TRANSFER-CURRENCY              PIC X(3).

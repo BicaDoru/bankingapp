@@ -1,0 +1,5 @@
+       01 CUSTOMER-TABLE.
+         05 H-CUST-ID               PIC 9(05).
+         05 H-CUST-USERNAME         PIC X(50).
+         05 H-CUST-ADDRESS          PIC X(50).
+         05 H-CUST-BANKUSERID       PIC 9(05).

@@ -1,0 +1,58 @@
+#!/bin/bash
+
+programs_to_compile=("TRANSFERBO" "TRANSFERDB" "ACCDB" "CUSTDB" "BUSRDB" "TRANSDB" "ACCBO" "BUSRBO" "CUSTBO" "GENERIC" "DISPATCHER" "ERROR" "LOGGER")
+compiled_files_no=0
+total_files_no=${#programs_to_compile[@]}
+
+
+compile_summary=""
+
+compile_program() {
+    local program=$1
+    echo "--- Compiling $program ---"
+
+    # Run the compile script and capture its output to a temporary file
+    local temp_output=$(mktemp)
+    bash scripts/compile "$program" &> "$temp_output"
+
+    # Get the exit status of the last command (which is bash scripts/compile "$program")
+    local status=$?
+
+    echo "status - ""$status"
+    
+    local output=$(cat "$temp_output")
+    rm "$temp_output" 
+
+    # echo "$status - status"
+    # echo "------------------------------------"
+
+    if [ $status -eq 0 ]; then
+        echo "SUCCESS"
+        compile_summary+="$program: OK\n"
+        compiled_files_no=$((compiled_files_no + 1))
+    else
+        echo "ERROR"
+        compile_summary+="$program: ERROR\n"
+        echo "------------------------------------"
+        echo "Error details for $program:"
+        echo "$output"
+        echo "------------------------------------"
+    fi
+}
+
+for program in "${programs_to_compile[@]}"; do
+    compile_program "$program"
+done
+
+echo -e "\n--- Final Compilation Summary ---"
+echo -e "$compile_summary"
+echo "-----------------------------------"
+echo "Compiled $compiled_files_no files successfully out of $total_files_no."
+echo "------------------------------------"
+
+# Exit with 0 if all compiled successfully, 1 otherwise
+if [ $compiled_files_no -eq $total_files_no ]; then
+    exit 0
+else
+    exit 1
+fi

@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# Define tag delimiters
+TRANS_REMOVE_TIMESTAMP="trans-remove-ts"
+DEFAULT_OUTPUT="run-default"
+O_START_TAG="<O_START>"
+O_END_TAG="<O_END>"
+ERR_START_TAG="<ERR_START>"
+ERR_END_TAG="<ERR_END>"
+
+# Function to extract value between <O_START> and <O_END>
+get_output_value() {
+    local input="$1"
+    echo "$input" | sed -n "s/.*${O_START_TAG}\(.*\)${O_END_TAG}.*/\1/p"
+}
+
+get_formatted_output() {
+    local input="$1"
+    local format="$2"
+
+    # always start from the clean <O_START>...<O_END> value
+    local raw_value=$(get_output_value "$input")
+
+
+    if [ "$format" = "trans-remove-ts" ]; then
+        # remove timestamp field (22 chars) at known position
+        echo "$raw_value" | sed -E 's/[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\+00/<TS>/g'
+    else 
+        echo "$raw_value"
+    fi
+}
+
+
+# Function to extract value between <ERR_START> and <ERR_END>
+get_error_value() {
+    local input="$1"
+    echo "$input" | sed -n "s/.*${ERR_START_TAG}\(.*\)${ERR_END_TAG}.*/\1/p"
+}
+
+# Function to append values back to a given file with tags
+# Usage: write_actual_output "<output_value>" "<error_value>" "filename.txt"
+append_output_to_file() {
+    local output_value="$1"
+    local error_value="$2"
+    local file_name="$3"
+
+    {
+        echo "${O_START_TAG}${output_value}${O_END_TAG}"
+        echo "${ERR_START_TAG}${error_value}${ERR_END_TAG}"
+    } >> "$file_name"
+}
+
+run_dispatcher_clean() {
+    local output_file="$1"
+    local input_value="$2"
+    local output_format="$3"
+    local temp_output_file=$(mktemp)
+    bin/DISPATCHER "$2"  &> "$temp_output_file"
+    local result=$(cat "$temp_output_file")
+    local dispatcher_output
+    if [ -z "$output_format" ]; then
+        dispatcher_output=$(get_output_value "$result")
+    else
+        dispatcher_output=$(get_formatted_output "$result" "$output_format")
+    fi
+    local dispatcher_error=$(get_error_value "$result")
+    append_output_to_file "$dispatcher_output" "$dispatcher_error" "$output_file"
+
+    rm "$temp_output_file"
+}
+
+run_dispatcher_quiet() {
+    local input_value="$1"
+    bin/DISPATCHER "$input_value" >/dev/null 2>&1
+}
+
