@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>AU05ACCBO: Permission denied. Action of Client to any other user than self not allowed.<ERR_END>

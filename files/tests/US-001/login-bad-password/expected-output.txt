@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>US03BUSRBO: Bad password for user 'client1'.<ERR_END>

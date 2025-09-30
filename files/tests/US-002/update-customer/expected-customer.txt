@@ -1,0 +1,5 @@
+id|username|address|bankuserid
+1|teller1                                           |Cobol 404                                         |2
+2|teller2                                           |Cobol 404                                         |3
+3|client1                                           |AI4LYF3                                           |4
+4|client2                                           |AI4LYF4                                           |5

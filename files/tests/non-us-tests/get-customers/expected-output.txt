@@ -1,0 +1,16 @@
+<O_START>1000001teller1                                           Cobol 404                                         0000200002teller2                                           Cobol 404                                         0000300003client1                                           AI4LYF3                                           0000400004client2                                           AI4LYF3                                           0000500005client3                                          Zorilor1                                           0000300006client4                                          Zorilor2                                           0000100007client5                                          Zorilor3                                           0000200008client6                                          Zorilor2                                           0000400009client7                                          Zorilor3                                           0000100010client8                                          Zorilor2                                           00001<O_END>
+<ERR_START>0000<ERR_END>
+<O_START>0500011teller3                                          Zorilor9                                           0000100012teller4                                          Zorilor8                                           0000100013teller5                                          Zorilor7                                           0000100014teller6                                          Zorilor6                                           0000100015teller7                                          Zorilor5                                           00001<O_END>
+<ERR_START>0000<ERR_END>
+<O_START>0100011teller3                                          Zorilor9                                           00001<O_END>
+<ERR_START>0000<ERR_END>
+<O_START>0400001teller1                                           Cobol 404                                         0000200002teller2                                           Cobol 404                                         0000300003client1                                           AI4LYF3                                           0000400004client6                                           AI4LYF4                                           00005<O_END>
+<ERR_START>0000<ERR_END>
+<O_START>00<O_END>
+<ERR_START>0000<ERR_END>
+<O_START>0300002teller2                                           Cobol 404                                         0000300003client1                                           AI4LYF3                                           0000400004client2                                           AI4LYF3                                           00005<O_END>
+<ERR_START>0000<ERR_END>
+<O_START><O_END>
+<ERR_START>AU01CUSTBO: Permission denied. Action for a user with role 'BaTe' not allowed.<ERR_END>
+<O_START><O_END>
+<ERR_START>AU01CUSTBO: Permission denied. Action for a user with role 'BaCl' not allowed.<ERR_END>

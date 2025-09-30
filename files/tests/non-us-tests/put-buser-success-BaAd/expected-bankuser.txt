@@ -1,0 +1,6 @@
+id|username|password|role
+1|admin                                             |admin                                                       |BaAd
+2|teller1                                           |teller1                                                     |BaTe
+3|teller2                                           |teller2                                                     |BaTe
+4|client1                                           |client1                                                     |BaCl
+5|client_updated                                    |client2                                                     |BaTe

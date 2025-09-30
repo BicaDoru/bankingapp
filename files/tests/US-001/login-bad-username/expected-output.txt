@@ -1,0 +1,2 @@
+<O_START><O_END>
+<ERR_START>US02BUSRBO: User 'clien1' has not been found.<ERR_END>

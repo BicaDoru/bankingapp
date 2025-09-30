@@ -1,0 +1,14 @@
+<O_START>010011clientf                                           BaCl<O_END>
+<ERR_START>0000<ERR_END>
+<O_START>050001admin                                             BaAd0002teller1                                           BaTe0003teller2                                           BaTe0004client1                                           BaCl0005client2                                           BaCl<O_END>
+<ERR_START>0000<ERR_END>
+<O_START>100001admin                                             BaAd0002teller1                                           BaTe0003teller2                                           BaTe0004client1                                           BaCl0005client2                                           BaCl0006clienta                                           BaCl0007clientb                                           BaCl0008clientc                                           BaCl0009clientd                                           BaCl0010cliente                                           BaCl<O_END>
+<ERR_START>0000<ERR_END>
+<O_START>030011clientf                                           BaCl0012clientg                                           BaCl0013clienth                                           BaCl<O_END>
+<ERR_START>0000<ERR_END>
+<O_START>00<O_END>
+<ERR_START>0000<ERR_END>
+<O_START><O_END>
+<ERR_START>AU01BUSRBO: Permission denied. Action for a user with role 'BaTe' not allowed.<ERR_END>
+<O_START><O_END>
+<ERR_START>AU01BUSRBO: Permission denied. Action for a user with role 'BaCl' not allowed.<ERR_END>

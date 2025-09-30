@@ -1,0 +1,6 @@
+id|username
+1|teller1                                           
+2|teller2                                           
+3|client1                                           
+4|client2                                           
+5|andreeat                                          
